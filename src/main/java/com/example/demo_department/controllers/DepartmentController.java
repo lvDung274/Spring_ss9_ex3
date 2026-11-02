@@ -1,6 +1,7 @@
 package com.example.demo_department.controllers;
 
 import com.example.demo_department.models.dto.req.DepartmentDTO;
+import com.example.demo_department.models.dto.response.ApiResponse;
 import com.example.demo_department.models.entities.Department;
 import com.example.demo_department.models.services.DepartmentService;
 import jakarta.validation.Valid;
@@ -19,11 +20,15 @@ public class DepartmentController {
     private final DepartmentService departmentService;
 
     @PostMapping
-    ResponseEntity<Department> createDepartment(@Valid @RequestBody DepartmentDTO req) {
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(departmentService.createDepartment(req));
+    public ResponseEntity<ApiResponse<Department>> createDepartment(@Valid @RequestBody DepartmentDTO req) {
+        Department createdDepartment = departmentService.createDepartment(req);
 
+        ApiResponse<Department> apiResponse = ApiResponse.<Department>builder()
+                .status("SUCCESS")
+                .message("Tạo phòng ban thành công")
+                .data(createdDepartment)
+                .build();
+        return ResponseEntity.status(HttpStatus.CREATED).body(apiResponse);
     }
 
 }

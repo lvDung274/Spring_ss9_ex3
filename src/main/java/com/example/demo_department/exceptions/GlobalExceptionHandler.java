@@ -1,5 +1,7 @@
 package com.example.demo_department.exceptions;
 
+import com.example.demo_department.models.dto.response.ApiResponse;
+import com.example.demo_department.models.entities.Department;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -15,7 +17,14 @@ public class GlobalExceptionHandler {
     public ResponseEntity<?> handleValidException(MethodArgumentNotValidException ex) {
         Map<String, String> errors = new HashMap<>();
         ex.getFieldErrors().forEach(err -> errors.put(err.getField(),err.getDefaultMessage()));
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
+
+        ApiResponse<?> apiResponse = ApiResponse.builder()
+                .status("Fail")
+                .message("Dữ liệu đầu vào không hợp lệ")
+                .data(errors)
+                .build();
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiResponse);
     }
 
 }
